@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Passkeys NextJS App
 
-## Getting Started
-
-First, run the development server:
+Get started with Passkeys in just 2 minutes
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npx create-next-app@latest pdk-next
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npx install @passkeys/core @passkeys/react
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+***Generate a random UUID***
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Example: 12345678-abcd-efgh-ijkl-mnopqrstuvwx
 
-## Learn More
+For production request one here [hello@passkeys.foundation] / [passkeys.foundation]
 
-To learn more about Next.js, take a look at the following resources:
+New a new component
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```tsx filename=src/app/components/Wallet.tsx
+'use client'
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+import { createWallet } from '@passkeys/core';
+import { WalletProvider } from '@passkeys/react';
 
-## Deploy on Vercel
+export default function Wallet({
+    children
+  }: {
+    children: React.ReactNode;
+  }) {
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    const wallet = createWallet({
+        appId: '8bd805f2-fac5-4f37-9bf9-204e27f3f8f7', // Only required for production, contact us to get yours.
+        providers: {
+          solana: true,
+        },
+      });
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+      return(
+<>
+<WalletProvider wallet={wallet}>
+        {children as NonNullable<React.ReactNode>}
+</WalletProvider>
+</>
+      )
+    }
+```
+
+Import Wallet into the Layout
+
+```tsx filename=/src/app/layout.tsx
+import Wallet from "./components/Wallet";
+
+...
+<Wallet>
+{children}
+</Wallet>
+```
+
+Use Wallet on Page
+
+```tsx filename=/src/app/page.tsx
+'use client'
+
+import { WalletWidget } from "@passkeys/react";
+
+...
+<WalletWidget/>
+...
+
+```
