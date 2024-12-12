@@ -64,6 +64,12 @@ Use Wallet on Page
 'use client'
 
 import { WalletWidget } from "@passkeys/react";
+import { useWallet } from "@passkeys/react";
+
+...
+const wallet = useWallet();
+const connectWallet = () => {  wallet.providers.solana.connect();};
+...
 
 ...
 <WalletWidget/>
